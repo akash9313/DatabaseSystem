@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard | ProAssign</title>
+<link rel="stylesheet" href="../css/admin.css">
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- Sidebar -->
+<div class="sidebar">
+
+<h2>ProAssign</h2>
+
+<ul>
+<li onclick="showSection('dashboard')">Dashboard</li>
+<li onclick="showSection('employees')">Employees</li>
+<li onclick="showSection('skills')">Skills</li>
+<li onclick="showSection('employeeSkills')">Employee Skills</li>
+<li onclick="showSection('projects')">Projects</li>
+<li onclick="showSection('allocation')">Allocation</li>
+<li onclick="logout()">Logout</li>
+</ul>
+
+</div>
+
+
+<!-- Main Content -->
+<div class="main">
+
+<h1>Admin Dashboard</h1>
+
+<!-- ================= DASHBOARD ================= -->
+
+<div id="dashboard" class="section">
+
+<div class="cards">
+
+<div class="card">
+<h3>Total Employees</h3>
+<p id="empCount">0</p>
+</div>
+
+<div class="card">
+<h3>Total Projects</h3>
+<p id="projectCount">0</p>
+</div>
+
+<div class="card">
+<h3>Total Skills</h3>
+<p id="skillCount">0</p>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ================= EMPLOYEES ================= -->
+
+<div id="employees" class="section" style="display:none">
+
+<h2>Employees</h2>
+
+<h3>Add Employee</h3>
+
+<form id="employeeForm">
+
+<input type="text" id="name" placeholder="Name" required>
+
+<input type="email" id="email" placeholder="Email" required>
+
+<input type="password" id="password" placeholder="Password" required>
+
+<input type="text" id="phone" placeholder="Phone">
+
+<input type="text" id="department" placeholder="Department">
+
+<input type="text" id="designation" placeholder="Designation">
+
+<input type="number" id="experience" placeholder="Experience Years">
+
+<select id="status">
+<option value="Available">Available</option>
+<option value="Busy">Busy</option>
+</select>
+
+<button type="submit">Add Employee</button>
+
+</form>
+
+<hr>
+
+<button onclick="loadEmployees()">Refresh Employees</button>
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Email</th>
+<th>Department</th>
+<th>Designation</th>
+</tr>
+</thead>
+
+<tbody id="employeeTable"></tbody>
+
+</table>
+
+</div>
+
+
+<!-- ================= SKILLS ================= -->
+
+<div id="skills" class="section" style="display:none">
+
+<h2>Skills</h2>
+
+<h3>Add Skill</h3>
+
+<form id="skillForm">
+
+<input type="text" id="skill_name" placeholder="Skill Name" required>
+
+<input type="text" id="skill_category" placeholder="Skill Category">
+
+<input type="text" id="skill_description" placeholder="Description">
+
+<button type="submit">Add Skill</button>
+
+</form>
+
+<hr>
+
+<button onclick="loadSkills()">Refresh Skills</button>
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Skill</th>
+<th>Category</th>
+</tr>
+</thead>
+
+<tbody id="skillTable"></tbody>
+
+</table>
+
+</div>
+
+
+<!-- ================= EMPLOYEE SKILLS ================= -->
+
+<div id="employeeSkills" class="section" style="display:none">
+
+<h2>Assign Skill to Employee</h2>
+
+<form id="assignSkillForm">
+
+<input type="number" id="employee_id" placeholder="Employee ID" required>
+
+<input type="number" id="skill_id" placeholder="Skill ID" required>
+
+<input type="text" id="level" placeholder="Proficiency Level">
+
+<input type="number" id="years" placeholder="Years of Experience">
+
+<button type="submit">Assign Skill</button>
+
+</form>
+
+<hr>
+
+<h3>Employee Skills</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>Employee</th>
+<th>Skill</th>
+<th>Level</th>
+<th>Experience</th>
+</tr>
+</thead>
+
+<tbody id="employeeSkillTable"></tbody>
+
+</table>
+
+</div>
+
+<!-- =========================
+Projects Section
+========================= -->
+
+<div id="projects" class="section" style="display:none">
+
+<h2>Projects</h2>
+
+<h3>Create Project</h3>
+
+<form id="projectForm">
+
+<input type="text" id="project_name" placeholder="Project Name" required>
+
+<input type="text" id="project_description" placeholder="Description">
+
+<input type="date" id="start_date">
+
+<input type="date" id="end_date">
+
+<select id="project_status">
+<option value="Planned">Planned</option>
+<option value="Ongoing">Ongoing</option>
+<option value="Completed">Completed</option>
+</select>
+
+<button type="submit">Create Project</button>
+
+</form>
+
+<hr>
+
+<button onclick="loadProjects()">Refresh Projects</button>
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Status</th>
+<th>Start</th>
+<th>End</th>
+</tr>
+</thead>
+
+<tbody id="projectTable"></tbody>
+
+</table>
+
+</div>
+
+<!-- =========================
+Employee Allocation
+========================= -->
+
+<div id="allocation" class="section" style="display:none">
+
+<h2>Project Allocation</h2>
+
+<h3>Assign Employee to Project</h3>
+
+<form id="allocationForm">
+
+<select id="alloc_employee_id" required>
+<option value="">Select Employee</option>
+</select>
+
+<select id="alloc_project_id" required>
+<option value="">Select Project</option>
+</select>
+
+<input type="text" id="role" placeholder="Role in Project">
+
+<input type="date" id="alloc_date">
+
+<button type="submit">Allocate Employee</button>
+
+</form>
+
+<hr>
+
+<button onclick="loadAllocations()">Refresh Allocations</button>
+
+<table>
+
+<thead>
+<tr>
+<th>Employee</th>
+<th>Project</th>
+<th>Role</th>
+<th>Date</th>
+</tr>
+</thead>
+
+<tbody id="allocationTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+</div>
+
+<script src="../js/admin-dashboard.js"></script>
+
+</body>
+</html>
