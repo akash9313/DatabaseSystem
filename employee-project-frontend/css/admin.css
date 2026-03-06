@@ -85,3 +85,20 @@ border:none;
 cursor:pointer;
 border-radius:5px;
 }
+
+.charts{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:30px;
+margin-top:30px;
+}
+
+.chart-box{
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+}
+
+canvas{
+height:300px !important;
+}

@@ -62,4 +62,55 @@ message:"Project created successfully"
 
 });
 
+/* =========================
+SUGGEST EMPLOYEES FOR PROJECT
+========================= */
+
+router.get("/suggest/:projectId",(req,res)=>{
+
+const projectId = req.params.projectId;
+
+const sql = `
+SELECT DISTINCT e.employee_id, e.name, e.department
+FROM employee e
+JOIN employee_skill es ON e.employee_id = es.employee_id
+JOIN project_skill ps ON es.skill_id = ps.skill_id
+WHERE ps.project_id = ?
+`;
+
+db.query(sql,[projectId],(err,result)=>{
+
+if(err){
+return res.status(500).json({message:"Database error"});
+}
+
+res.json(result);
+
+});
+
+});
+
+/* Project Status Stats */
+
+router.get("/status-stats",(req,res)=>{
+
+const sql = `
+SELECT project_status, COUNT(*) as total
+FROM project
+GROUP BY project_status
+`;
+
+db.query(sql,(err,result)=>{
+
+if(err){
+return res.status(500).json({message:"Database error"});
+}
+
+res.json(result);
+
+});
+
+});
+
 module.exports = router;
+

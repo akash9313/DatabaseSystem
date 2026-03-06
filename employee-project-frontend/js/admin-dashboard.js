@@ -24,32 +24,88 @@ window.logout = logout;
 Section Switch
 ====================== */
 
-function showSection(id) {
+function showSection(id){
 
-  const sections = document.querySelectorAll(".section");
+document.querySelectorAll(".section").forEach(sec=>{
+sec.style.display="none";
+});
 
-  sections.forEach(sec => {
-    sec.style.display = "none";
-  });
+document.getElementById(id).style.display="block";
 
-  const selected = document.getElementById(id);
+/* Destroy charts when leaving dashboard */
+if(id !== "dashboard"){
+destroyCharts();
+}
 
-  if (selected) {
-    selected.style.display = "block";
-  }
+/* Load section data */
 
-  if (id === "employees") loadEmployees();
-  if (id === "skills") loadSkills();
-  if (id === "employeeSkills") loadEmployeeSkills();
-  if(id==="projects") loadProjects();
-  if(id==="allocation"){
-  loadAllocations();
-  loadEmployeeDropdown();
-  loadProjectDropdown();
-  }
+if(id === "dashboard") loadDashboard();
+if(id === "employees") loadEmployees();
+if(id === "skills") loadSkills();
+if(id === "employeeSkills") loadEmployeeSkills();
+if(id === "projects") loadProjects();
+if(id === "allocation"){
+loadAllocations();
+loadEmployeeDropdown();
+loadProjectDropdown();
+}
+
 }
 
 window.showSection = showSection;
+
+/* ======================
+Load Dashboard Stats
+====================== */
+
+async function loadDashboard(){
+
+/* Employees */
+
+const empRes = await fetch(API + "/employees",{
+headers:{ Authorization:"Bearer " + token }
+});
+const employees = await empRes.json();
+
+document.getElementById("empCount").innerText = employees.length;
+
+
+/* Skills */
+
+const skillRes = await fetch(API + "/skills",{
+headers:{ Authorization:"Bearer " + token }
+});
+const skills = await skillRes.json();
+
+document.getElementById("skillCount").innerText = skills.length;
+
+
+/* Projects */
+
+const projectRes = await fetch(API + "/projects",{
+headers:{ Authorization:"Bearer " + token }
+});
+const projects = await projectRes.json();
+
+document.getElementById("projectCount").innerText = projects.length;
+
+
+/* Allocations */
+
+const allocRes = await fetch(API + "/allocation",{
+headers:{ Authorization:"Bearer " + token }
+});
+const allocations = await allocRes.json();
+
+document.getElementById("allocationCount").innerText = allocations.length;
+
+
+/* Charts */
+
+await loadDepartmentChart();
+await loadProjectChart();
+
+}
 
 /* ======================
 Load Employees
@@ -80,7 +136,7 @@ async function loadEmployees() {
         <td>${emp.employee_id}</td>
         <td>${emp.name}</td>
         <td>${emp.email}</td>
-        <td>${emp.department}</td>
+        <td>${emp.department_id}</td>
         <td>${emp.designation}</td>
       </tr>
       `;
@@ -118,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
         email: document.getElementById("email").value,
         password: document.getElementById("password").value,
         phone: document.getElementById("phone").value,
-        department: document.getElementById("department").value,
+        department_id: document.getElementById("department_id").value,
         designation: document.getElementById("designation").value,
         experience_years: document.getElementById("experience").value,
         availability_status: document.getElementById("status").value
@@ -187,6 +243,64 @@ async function loadSkills() {
 }
 
 /* ======================
+Add Skill
+====================== */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+const skillForm = document.getElementById("skillForm");
+
+if (skillForm) {
+
+skillForm.addEventListener("submit", async function(e){
+
+e.preventDefault();   // VERY IMPORTANT (prevents page reload)
+
+try{
+
+const skill = {
+
+skill_name: document.getElementById("skill_name").value,
+skill_category: document.getElementById("skill_category").value,
+description: document.getElementById("skill_description").value
+
+};
+
+const res = await fetch(API + "/skills",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json",
+Authorization:"Bearer " + token
+},
+
+body: JSON.stringify(skill)
+
+});
+
+const data = await res.json();
+
+alert(data.message || "Skill Added Successfully");
+
+skillForm.reset();
+
+loadSkills();
+
+}catch(err){
+
+console.log(err);
+alert("Error adding skill");
+
+}
+
+});
+
+}
+
+});
+
+/* ======================
 Load Employee Skills
 ====================== */
 
@@ -220,6 +334,65 @@ async function loadEmployeeSkills() {
   });
 
 }
+
+/* ======================
+Assign Skill to Employee
+====================== */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+const assignForm = document.getElementById("assignSkillForm");
+
+if (assignForm) {
+
+assignForm.addEventListener("submit", async function(e){
+
+e.preventDefault(); // stops page reload
+
+try{
+
+const skill = {
+
+employee_id: document.getElementById("employee_id").value,
+skill_id: document.getElementById("skill_id").value,
+proficiency_level: document.getElementById("level").value,
+years_of_experience: document.getElementById("years").value
+
+};
+
+const res = await fetch(API + "/employee-skills",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json",
+Authorization:"Bearer " + token
+},
+
+body: JSON.stringify(skill)
+
+});
+
+const data = await res.json();
+
+alert(data.message || "Skill assigned successfully");
+
+assignForm.reset();
+
+loadEmployeeSkills();
+
+}catch(err){
+
+console.log(err);
+alert("Error assigning skill");
+
+}
+
+});
+
+}
+
+});
 
 /* ======================
 Load Projects
@@ -404,7 +577,7 @@ dropdown.innerHTML = '<option value="">Select Employee</option>';
 data.forEach(emp=>{
 dropdown.innerHTML += `
 <option value="${emp.employee_id}">
-${emp.name} (${emp.department})
+${emp.name} (${emp.department_id})
 </option>
 `;
 });
@@ -436,10 +609,122 @@ ${project.project_name}
 }
 
 /* ======================
+Suggest Employees
+====================== */
+
+async function suggestEmployees(){
+
+const projectId = document.getElementById("alloc_project_id").value;
+
+if(!projectId) return;
+
+const res = await fetch(API + "/projects/suggest/" + projectId,{
+headers:{
+Authorization:"Bearer " + token
+}
+});
+
+const data = await res.json();
+
+const table = document.getElementById("suggestedEmployees");
+
+table.innerHTML = "";
+
+data.forEach(emp=>{
+
+table.innerHTML += `
+<tr>
+<td>${emp.name}</td>
+<td>${emp.department_id}</td>
+</tr>
+`;
+
+});
+
+}
+
+let departmentChart;
+
+async function loadDepartmentChart(){
+
+const res = await fetch(API + "/employees/department-stats");
+const data = await res.json();
+
+const labels = data.map(d => d.department_id);
+const values = data.map(d => d.total);
+
+const ctx = document.getElementById("departmentChart");
+
+if(!ctx) return;
+
+if(departmentChart) departmentChart.destroy();
+
+departmentChart = new Chart(ctx,{
+type:"bar",
+data:{
+labels:labels,
+datasets:[{
+label:"Employees per Department",
+data:values,
+backgroundColor:"#38bdf8"
+}]
+}
+});
+
+}
+
+let projectChart;
+
+async function loadProjectChart(){
+
+const res = await fetch(API + "/projects/status-stats");
+const data = await res.json();
+
+const labels = data.map(p => p.project_status);
+const values = data.map(p => p.total);
+
+const ctx = document.getElementById("projectStatusChart");
+
+if(!ctx) return;
+
+if(projectChart) projectChart.destroy();
+
+projectChart = new Chart(ctx,{
+type:"pie",
+data:{
+labels:labels,
+datasets:[{
+data:values,
+backgroundColor:[
+"#38bdf8",
+"#22c55e",
+"#f59e0b"
+]
+}]
+}
+});
+
+}
+
+function destroyCharts(){
+
+if(departmentChart){
+departmentChart.destroy();
+departmentChart = null;
+}
+
+if(projectChart){
+projectChart.destroy();
+projectChart = null;
+}
+
+}
+
+/* ======================
 Initial Load
 ====================== */
 
 window.onload = () => {
-  loadEmployees();
+  showSection("dashboard");
 };
 

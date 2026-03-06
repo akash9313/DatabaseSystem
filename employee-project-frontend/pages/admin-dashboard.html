@@ -31,11 +31,13 @@
 <!-- Main Content -->
 <div class="main">
 
-<h1>Admin Dashboard</h1>
+
 
 <!-- ================= DASHBOARD ================= -->
 
 <div id="dashboard" class="section">
+
+<h1>Admin Dashboard</h1>
 
 <div class="cards">
 
@@ -52,6 +54,25 @@
 <div class="card">
 <h3>Total Skills</h3>
 <p id="skillCount">0</p>
+</div>
+
+<div class="card">
+<h3>Allocated Employees</h3>
+<p id="allocationCount">0</p>
+</div>
+
+</div>
+
+<h2>Analytics</h2>
+
+<div class="charts">
+
+<div class="chart-box">
+<canvas id="departmentChart"></canvas>
+</div>
+
+<div class="chart-box">
+<canvas id="projectStatusChart"></canvas>
 </div>
 
 </div>
@@ -77,7 +98,13 @@
 
 <input type="text" id="phone" placeholder="Phone">
 
-<input type="text" id="department" placeholder="Department">
+<select id="department_id">
+<option value="1">HR</option>
+<option value="2">IT</option>
+<option value="3">Finance</option>
+<option value="4">Marketing</option>
+<option value="5">Operations</option>
+</select>
 
 <input type="text" id="designation" placeholder="Designation">
 
@@ -265,7 +292,7 @@ Employee Allocation
 <option value="">Select Employee</option>
 </select>
 
-<select id="alloc_project_id" required>
+<select id="alloc_project_id" required onchange="suggestEmployees()">
 <option value="">Select Project</option>
 </select>
 
@@ -276,6 +303,19 @@ Employee Allocation
 <button type="submit">Allocate Employee</button>
 
 </form>
+
+<h3>Suggested Employees</h3>
+
+<table>
+<thead>
+<tr>
+<th>Employee</th>
+<th>Department</th>
+</tr>
+</thead>
+
+<tbody id="suggestedEmployees"></tbody>
+</table>
 
 <hr>
 
@@ -301,6 +341,7 @@ Employee Allocation
 </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="../js/admin-dashboard.js"></script>
 
 </body>
