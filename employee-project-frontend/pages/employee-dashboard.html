@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<title>Employee Dashboard | ProAssign</title>
+<link rel="stylesheet" href="../css/employee.css">
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- Sidebar -->
+
+<div class="sidebar">
+
+<h2>ProAssign</h2>
+
+<ul>
+<li onclick="showSection('dashboard')">Dashboard</li>
+<li onclick="showSection('profile')">My Profile</li>
+<li onclick="showSection('skills')">My Skills</li>
+<li onclick="showSection('projects')">My Projects</li>
+<li onclick="logout()">Logout</li>
+</ul>
+
+</div>
+
+
+<!-- Main Content -->
+
+<div class="main">
+
+<!-- Dashboard -->
+
+<div id="dashboard" class="section">
+
+<h1>Employee Dashboard</h1>
+
+<div class="cards">
+
+<div class="card">
+<h3>Total Skills</h3>
+<p id="skillCount">0</p>
+</div>
+
+<div class="card">
+<h3>Assigned Projects</h3>
+<p id="projectCount">0</p>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Profile -->
+
+<div id="profile" class="section" style="display:none">
+
+<h2>My Profile</h2>
+
+<table>
+
+<tr>
+<td>Name</td>
+<td id="empName"></td>
+</tr>
+
+<tr>
+<td>Email</td>
+<td id="empEmail"></td>
+</tr>
+
+<tr>
+<td>Department</td>
+<td id="empDepartment"></td>
+</tr>
+
+<tr>
+<td>Designation</td>
+<td id="empDesignation"></td>
+</tr>
+
+<tr>
+<td>Experience</td>
+<td id="empExperience"></td>
+</tr>
+
+<tr>
+<td>Status</td>
+<td id="empStatus"></td>
+</tr>
+
+</table>
+
+</div>
+
+
+<!-- Skills -->
+
+<div id="skills" class="section" style="display:none">
+
+<h2>My Skills</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Skill</th>
+<th>Level</th>
+<th>Experience</th>
+</tr>
+</thead>
+
+<tbody id="skillTable"></tbody>
+
+</table>
+
+</div>
+
+
+<!-- Projects -->
+
+<div id="projects" class="section" style="display:none">
+
+<h2>My Projects</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Project</th>
+<th>Status</th>
+<th>Role</th>
+</tr>
+</thead>
+
+<tbody id="projectTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="../js/employee.js"></script>
+
+</body>
+</html>

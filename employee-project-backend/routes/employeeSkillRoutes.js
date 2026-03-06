@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
+const authMiddleware = require("../middleware/authMiddleware");
 
 /* =========================
    ASSIGN SKILL TO EMPLOYEE
@@ -57,6 +58,34 @@ db.query(sql,(err,result)=>{
 
 if(err){
 return res.status(500).json({message:"Database error"});
+}
+
+res.json(result);
+
+});
+
+});
+
+router.get("/my", authMiddleware, (req, res) => {
+
+const employeeId = req.user.id;
+
+const sql = `
+SELECT 
+s.skill_name,
+es.proficiency_level,
+es.years_of_experience
+FROM employee_skill es
+JOIN skill s
+ON es.skill_id = s.skill_id
+WHERE es.employee_id = ?
+`;
+
+db.query(sql, [employeeId], (err, result) => {
+
+if (err) {
+console.log(err);
+return res.status(500).json({ message: "Database error" });
 }
 
 res.json(result);

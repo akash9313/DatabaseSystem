@@ -164,7 +164,6 @@ WHERE e.employee_id = ?
 db.query(sql,[id],(err,result)=>{
 
 if(err){
-console.log(err);
 return res.status(500).json({message:"Database error"});
 }
 
@@ -197,6 +196,34 @@ db.query(sql,(err,result)=>{
 if(err){
 console.log(err);
 return res.status(500).json({message:"Database error"});
+}
+
+res.json(result);
+
+});
+
+});
+
+router.get("/projects/my", authMiddleware, (req, res) => {
+
+const employeeId = req.user.id;
+
+const sql = `
+SELECT 
+p.project_name,
+p.project_status,
+a.role_in_project
+FROM allocation a
+JOIN project p
+ON a.project_id = p.project_id
+WHERE a.employee_id = ?
+`;
+
+db.query(sql, [employeeId], (err, result) => {
+
+if (err) {
+console.log(err);
+return res.status(500).json({ message: "Database error" });
 }
 
 res.json(result);

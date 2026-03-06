@@ -32,9 +32,17 @@ localStorage.setItem("token",data.token);
 localStorage.setItem("role",data.role);
 
 if(role === "admin"){
+
 window.location.href="pages/admin-dashboard.html";
+
 }else{
+
+/* SAVE EMPLOYEE ID */
+
+localStorage.setItem("employee_id", data.employee.employee_id);
+
 window.location.href="pages/employee-dashboard.html";
+
 }
 
 }else{
