@@ -139,6 +139,10 @@ document.getElementById("projectCount").innerText=data.length;
 
 }
 
+document.querySelectorAll(".sidebar ul li").forEach(li=>{
+li.classList.remove("active");
+});
+
 /* Initial Load */
 
 window.onload = () => {

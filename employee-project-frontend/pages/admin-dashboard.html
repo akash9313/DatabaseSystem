@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Dashboard | ProAssign</title>
 <link rel="stylesheet" href="../css/admin.css">
 </head>
@@ -123,6 +124,7 @@
 
 <button onclick="loadEmployees()">Refresh Employees</button>
 
+<div class="table-container">
 <table>
 
 <thead>
@@ -138,6 +140,7 @@
 <tbody id="employeeTable"></tbody>
 
 </table>
+</div>
 
 </div>
 
@@ -166,6 +169,7 @@
 
 <button onclick="loadSkills()">Refresh Skills</button>
 
+<div class="table-container">
 <table>
 
 <thead>
@@ -179,6 +183,7 @@
 <tbody id="skillTable"></tbody>
 
 </table>
+</div>
 
 </div>
 
@@ -207,6 +212,7 @@
 
 <h3>Employee Skills</h3>
 
+<div class="table-container">
 <table>
 
 <thead>
@@ -221,6 +227,7 @@
 <tbody id="employeeSkillTable"></tbody>
 
 </table>
+</div>
 
 </div>
 
@@ -258,6 +265,7 @@ Projects Section
 
 <button onclick="loadProjects()">Refresh Projects</button>
 
+<div class="table-container">
 <table>
 
 <thead>
@@ -273,6 +281,7 @@ Projects Section
 <tbody id="projectTable"></tbody>
 
 </table>
+</div>
 
 </div>
 
@@ -306,6 +315,7 @@ Employee Allocation
 
 <h3>Suggested Employees</h3>
 
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -316,11 +326,13 @@ Employee Allocation
 
 <tbody id="suggestedEmployees"></tbody>
 </table>
+</div>
 
 <hr>
 
 <button onclick="loadAllocations()">Refresh Allocations</button>
 
+<div class="table-container">
 <table>
 
 <thead>
@@ -335,6 +347,7 @@ Employee Allocation
 <tbody id="allocationTable"></tbody>
 
 </table>
+</div>
 
 </div>
 
